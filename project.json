@@ -1,0 +1,20 @@
+{
+  "overview": "A dark, mobile-first virtual DJ controller with two decks, a central mixer, effects, sample pads and recording.",
+  "features": [
+    "Two independent decks with jog wheels, BPM and time displays",
+    "Central mixer with 3-band EQ, gain, filter and crossfader",
+    "Effects and performance pads for samples, hot cues, scratch and stems",
+    "Load demo tracks or upload your own audio",
+    "Record your mix and download it",
+    "Installable on your phone as an app"
+  ],
+  "category": "music",
+  "tags": [
+    "dj",
+    "music",
+    "audio",
+    "mixer",
+    "mobile"
+  ],
+  "last_updated": "2026-10-14T17:13:33.571Z"
+}

@@ -1,0 +1,136 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type Value = 
+ variant {
+   "bool": bool;
+   float: float64;
+   "int": int;
+   "nat": nat;
+   "null";
+   "text": text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type Track = 
+ record {
+   createdAt: Timestamp;
+   durationMs: DurationMs;
+   file: ExternalBlob;
+   id: EntryId;
+   name: text;
+   owner: principal;
+ };
+type Timestamp = nat;
+type Sample = 
+ record {
+   createdAt: Timestamp;
+   file: ExternalBlob;
+   id: EntryId;
+   name: text;
+   owner: principal;
+   padSlot: PadSlot;
+ };
+type Result__1 = 
+ variant {
+   err: Error;
+   ok;
+ };
+type Result = 
+ record {
+   hasMore: bool;
+   rows: vec vec Cell;
+ };
+type PadSlot = nat;
+type ExternalBlob = blob;
+type Error = 
+ variant {
+   AmbiguousAttribute: record {
+                         field: text;
+                         sources: vec text;
+                       };
+   FrontendOriginMismatch: record {
+                             expected: vec text;
+                             got: text;
+                           };
+   FrontendOriginsNotConfigured;
+   MalformedCandid;
+   MissingField: text;
+   MixedSsoSources: record {
+                      otherKeys: vec text;
+                      ssoKeys: vec text;
+                    };
+   NoAttributes;
+   Stale: record {ageNs: nat;};
+   UnknownNonce;
+   UntrustedSsoSource: record {domain: text;};
+ };
+type EntryId = nat;
+type DurationMs = nat;
+type Cell = 
+ record {
+   name: text;
+   value: Value;
+ };
+type CabinSettings = 
+ record {
+   owner: principal;
+   payload: text;
+   updatedAt: Timestamp;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initialize_access_control: () -> ();
+  _internet_identity_sign_in_finish: () -> (Result__1);
+  _internet_identity_sign_in_start: () -> (blob);
+  /// Assign an uploaded audio file to a pad slot for the caller.
+  /// Requires a signed-in caller; the entry is scoped to the caller.
+  addSample: (padSlot: PadSlot, file: ExternalBlob, name: text) -> (Sample);
+  /// Add an uploaded audio file to the caller's track library.
+  /// Requires a signed-in caller; the entry is scoped to the caller.
+  addTrack: (file: ExternalBlob, name: text, durationMs: DurationMs) ->
+   (Track);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  /// Delete one of the caller's samples by id. Requires a signed-in caller.
+  deleteSample: (id: EntryId) -> (bool);
+  /// Delete one of the caller's tracks by id. Requires a signed-in caller.
+  deleteTrack: (id: EntryId) -> (bool);
+  execute: (qJson: text) -> (Result) query;
+  /// Return the backend API documentation as Markdown.
+  getApiDoc: () -> (text) query;
+  getCallerUserRole: () -> (UserRole) query;
+  /// Return the caller's saved cabin settings, or null when none are stored.
+  /// Requires a signed-in caller.
+  getSettings: () -> (opt CabinSettings) query;
+  isCallerAdmin: () -> (bool) query;
+  /// List the caller's pad samples. Requires a signed-in caller.
+  listSamples: () -> (vec Sample) query;
+  /// List the caller's uploaded tracks. Requires a signed-in caller.
+  listTracks: () -> (vec Track) query;
+  schema: () -> (text) query;
+  /// Persist the caller's cabin settings. Requires a signed-in caller;
+  /// the record is scoped to the caller.
+  setSettings: (payload: text) -> (CabinSettings);
+}

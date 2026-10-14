@@ -1,0 +1,102 @@
+// Version: 4.0.0
+type AccessControlState__201339279 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__230067015<Principal, UserRole__91647283>
+  };
+type CabinSettings__1017771391 =
+  {owner : Principal; payload : Text; updatedAt : Nat};
+type CabinSettings__648576993 =
+  {owner : Principal; payload : Text; updatedAt : Timestamp__301639476};
+type Data__44217153<K, V> = {var count : Nat__227979830; kvs : [var ?(K, V)]};
+type DurationMs__348794951 = Nat;
+type EntryId__144056575 = Nat;
+type ExternalBlob__220559234 = Blob;
+type Internal__283199666<K, V> =
+  {children : [var ?Node__204828119<K, V>]; data : Data__44217153<K, V>};
+type Leaf__598469445<K, V> = {data : Data__44217153<K, V>};
+type Map__230067015<K, V> = Map__405889023<K, V>;
+type Map__405889023<K, V> = Map__603270868<K, V>;
+type Map__603270868<K, V> =
+  {var root : Node__204828119<K, V>; var size : Nat__227979830};
+type Nat__227979830 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__930748306 =
+  {
+    accessControlState : AccessControlState__201339279;
+    samples :
+      Map__230067015<Principal, Map__230067015<Nat, Sample__280094407>>;
+    settings : Map__230067015<Principal, CabinSettings__1017771391>;
+    state : {var nextEntryId : Nat};
+    tracks : Map__230067015<Principal, Map__230067015<Nat, Track__891679213>>
+  };
+type Node__204828119<K, V> =
+  {#internal : Internal__283199666<K, V>; #leaf : Leaf__598469445<K, V>};
+type OldActor__438716108 = {};
+type PadSlot__232072681 = Nat;
+type Sample__21612145 =
+  {
+    createdAt : Timestamp__301639476;
+    file : ExternalBlob__220559234;
+    id : EntryId__144056575;
+    name : Text;
+    owner : Principal;
+    padSlot : PadSlot__232072681
+  };
+type Sample__280094407 =
+  {
+    createdAt : Nat;
+    file : Blob;
+    id : Nat;
+    name : Text;
+    owner : Principal;
+    padSlot : Nat
+  };
+type Timestamp__301639476 = Nat;
+type Track__891679213 =
+  {
+    createdAt : Nat;
+    durationMs : Nat;
+    file : Blob;
+    id : Nat;
+    name : Text;
+    owner : Principal
+  };
+type Track__962864779 =
+  {
+    createdAt : Timestamp__301639476;
+    durationMs : DurationMs__348794951;
+    file : ExternalBlob__220559234;
+    id : EntryId__144056575;
+    name : Text;
+    owner : Principal
+  };
+type UserRole__91647283 = {#admin; #guest; #user};
+{
+  "20261014_000000" : OldActor__438716108 -> NewActor__930748306
+}
+actor  {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__230067015<Principal, UserRole__91647283>
+    };
+  stable samples :
+    {
+      var root :
+        Node__204828119<Principal, Map__230067015<Nat, Sample__21612145>>;
+      var size : Nat__227979830
+    };
+  stable settings :
+    {
+      var root : Node__204828119<Principal, CabinSettings__648576993>;
+      var size : Nat__227979830
+    };
+  stable state : {var nextEntryId : Nat};
+  stable tracks :
+    {
+      var root :
+        Node__204828119<Principal, Map__230067015<Nat, Track__962864779>>;
+      var size : Nat__227979830
+    }
+};
